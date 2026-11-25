@@ -1,4 +1,4 @@
 # AdStewardAPI
 ```yaml
-# Openapi specification for AdStewardAPI
+Openapi specification for AdStewardAPI
 ```
