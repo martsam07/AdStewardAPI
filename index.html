@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>AdStewardAPI Documentation</title>
+  <link 
+    rel="stylesheet" 
+    href="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.18.2/swagger-ui.min.css" 
+  />
+</head>
+<body>
+  <div id="swagger-ui"></div>
+  <script 
+    src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.18.2/swagger-ui-bundle.min.js">
+  </script>
+  <script>
+    window.onload = () => {
+      window.ui = SwaggerUIBundle({
+        url: './adsteward_api.yaml',
+        dom_id: '#swagger-ui',
+      });
+    };
+  </script>
+</body>
+</html>
