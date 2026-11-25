@@ -1,0 +1,428 @@
+openapi: 3.0.2
+info:
+  title: AdStewardAPI
+  description: API управления процессами AdSteward Telegram Bidder
+  version: 0.1.0
+  x-api-version: 0.1.0
+paths:
+  /health/:
+    get:
+      tags:
+        - health
+      summary: Health
+      operationId: health_health__get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+  /health/detailed:
+    get:
+      tags:
+        - health
+      summary: Health Detailed
+      operationId: health_detailed_health_detailed_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthDetailedResponse'
+  /api/static/v2/bidder:
+    post:
+      tags:
+        - bidder
+      summary: Create Bidder Process
+      operationId: create_bidder_process_api_static_v2_bidder_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdStewardBidderSingleSpec'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdStewardBidderRequestInfo'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/static/v2/bidder/search:
+    post:
+      tags:
+        - bidder
+      summary: Search Bidder Processes
+      operationId: search_bidder_processes_api_static_v2_bidder_search_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdStewardBidderRequestSearchParams'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdStewardBidderRequestSearchResult'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/static/v2/bidder/{bidder_request_id}:
+    get:
+      tags:
+        - bidder
+      summary: Get Bidder Process
+      operationId: >-
+        get_bidder_process_api_static_v2_bidder__bidder_request_id__get
+      parameters:
+        - name: bidder_request_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Bidder Request Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdStewardBidderRequestInfo'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/static/v2/bidder/{bidder_request_id}/spec:
+    post:
+      tags:
+        - bidder
+      summary: Update Bidder Process Spec
+      operationId: >-
+        update_bidder_process_spec_api_static_v2_bidder__bidder_request_id__spec_post
+      parameters:
+        - name: bidder_request_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Bidder Request Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdStewardBidderRequestSpecUpdateInfo'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdStewardBidderRequestInfo'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/static/v2/bidder/{bidder_request_id}/stop:
+    post:
+      tags:
+        - bidder
+      summary: Stop Bidder Process
+      operationId: >-
+        stop_bidder_process_api_static_v2_bidder__bidder_request_id__stop_post
+      parameters:
+        - name: bidder_request_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Bidder Request Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdStewardBidderRequestInfo'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/static/v2/bidder/{bidder_request_id}/start:
+    post:
+      tags:
+        - bidder
+      summary: Start Bidder Process
+      operationId: >-
+        start_bidder_process_api_static_v2_bidder__bidder_request_id__start_post
+      parameters:
+        - name: bidder_request_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Bidder Request Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdStewardBidderRequestInfo'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    AdStewardBidderSingleSpec:
+      properties:
+        mode:
+          title: Mode
+          default: single
+          enum:
+            - single
+        channel:
+          title: Channel
+          default: telegram
+          enum:
+            - telegram
+        campaign_id:
+          type: string
+          title: Campaign Id
+        total_budget:
+          type: number
+          exclusiveMinimum: 0
+          title: Total Budget
+        action:
+          type: string
+          enum:
+            - clicks
+            - join
+          title: Action
+        action_value:
+          type: number
+          exclusiveMinimum: 0
+          title: Action Value
+        cpm_min:
+          type: number
+          minimum: 0
+          title: Cpm Min
+        cpm_max:
+          type: number
+          minimum: 0
+          title: Cpm Max
+        campaign_start_dt:
+          type: string
+          format: date-time
+          title: Campaign Start Dt
+        campaign_end_dt:
+          type: string
+          format: date-time
+          title: Campaign End Dt
+      type: object
+      required:
+        - campaign_id
+        - total_budget
+        - action
+        - action_value
+        - cpm_min
+        - cpm_max
+        - campaign_start_dt
+        - campaign_end_dt
+      title: AdStewardBidderSingleSpec
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    HealthDetailedResponse:
+      properties:
+        status:
+          type: string
+          title: Status
+        db:
+          type: string
+          title: Db
+        api_version:
+          type: string
+          title: Api Version
+      type: object
+      required:
+        - status
+        - db
+        - api_version
+      title: HealthDetailedResponse
+    HealthResponse:
+      properties:
+        status:
+          type: string
+          title: Status
+        api_version:
+          type: string
+          title: Api Version
+      type: object
+      required:
+        - status
+        - api_version
+      title: HealthResponse
+    AdStewardBidderRequestInfo:
+      properties:
+        bidder_request_id:
+          type: integer
+          title: Bidder Request Id
+        spec:
+          $ref: '#/components/schemas/AdStewardBidderSingleSpec'
+        status:
+          type: string
+          enum:
+            - ACTIVE
+            - INACTIVE
+          title: Status
+        message:
+          type: string
+          nullable: true
+          title: Message
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+      type: object
+      required:
+        - bidder_request_id
+        - spec
+        - status
+        - created_at
+        - updated_at
+      title: AdStewardBidderRequestInfo
+    AdStewardBidderRequestSearchParams:
+      properties:
+        bidder_request_ids:
+          items:
+            type: integer
+          type: array
+          nullable: true
+          title: Bidder Request Ids
+        channels:
+          items:
+            type: string
+          type: array
+          nullable: true
+          title: Channels
+        from_ts:
+          type: string
+          format: date-time
+          nullable: true
+          title: From Ts
+        to_ts:
+          type: string
+          format: date-time
+          nullable: true
+          title: To Ts
+        statuses:
+          items:
+            type: string
+            enum:
+              - ACTIVE
+              - INACTIVE
+          type: array
+          nullable: true
+          title: Statuses
+        offset:
+          type: integer
+          minimum: 0
+          title: Offset
+          default: 0
+        limit:
+          type: integer
+          maximum: 1000
+          minimum: 1
+          title: Limit
+          default: 100
+      type: object
+      title: AdStewardBidderRequestSearchParams
+    AdStewardBidderRequestSearchResult:
+      properties:
+        requests:
+          items:
+            $ref: '#/components/schemas/AdStewardBidderRequestInfo'
+          type: array
+          title: Requests
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+        - requests
+        - total
+      title: AdStewardBidderRequestSearchResult
+    AdStewardBidderRequestSpecUpdateInfo:
+      properties:
+        action_value:
+          type: number
+          exclusiveMinimum: 0
+          nullable: true
+          title: Action Value
+        cpm_min:
+          type: number
+          minimum: 0
+          nullable: true
+          title: Cpm Min
+        cpm_max:
+          type: number
+          minimum: 0
+          nullable: true
+          title: Cpm Max
+      type: object
+      title: AdStewardBidderRequestSpecUpdateInfo
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+              - type: string
+              - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+        - loc
+        - msg
+        - type
+      title: ValidationError
